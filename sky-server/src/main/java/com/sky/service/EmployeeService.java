@@ -10,8 +10,8 @@ public interface EmployeeService {
 
     /**
      * 员工登录
-     * @param employeeLoginDTO
-     * @return
+     * @param employeeLoginDTO 员工DTO
+     * @return 员工信息
      */
     Employee login(EmployeeLoginDTO employeeLoginDTO);
 
