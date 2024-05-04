@@ -1,4 +1,5 @@
 package com.sky.controller.admin;
+import com.sky.constant.MessageConstant;
 import com.sky.properties.AliOssProperties;
 import com.sky.result.Result;
 import com.sky.utils.AliOssUtil;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CommonController {
 
-    private AliOssUtil aliOssUtil;
+    private final AliOssUtil aliOssUtil;
 
     @ApiOperation("文件上传")
     @PostMapping("/upload")
@@ -32,12 +33,12 @@ public class CommonController {
         log.info("文件上传:{}", file.getOriginalFilename());
         try {
             //为防止文件名重复，文件名加上uuid
-            String filePath = aliOssUtil.upload(file.getBytes(),
+            String filePath = aliOssUtil.upload(file.getBytes(), UUID.randomUUID() +
                     Objects.requireNonNull(file.getOriginalFilename()).
-                            substring(file.getOriginalFilename().lastIndexOf(".")) + UUID.randomUUID());
+                            substring(file.getOriginalFilename().lastIndexOf(".")));
             return Result.success(filePath);
         } catch (IOException e) {
-            log.error("文件上传失败", e);
+            log.error(MessageConstant.UPLOAD_FAILED, e);
             throw new RuntimeException(e);
         }
     }
