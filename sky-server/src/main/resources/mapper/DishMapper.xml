@@ -13,12 +13,12 @@
             category c on d.category_id=c.id
         <where>
             <if test="name != null">
-                and d.name like CONCAT('%','鱼','%')
+                and d.name like CONCAT('%',#{name},'%')
             </if>
-            <if test="name != null">
+            <if test="categoryId != null">
                 and d.category_id = #{categoryId}
             </if>
-            <if test="name != null">
+            <if test="status != null">
                 and d.status = #{status}
             </if>
         </where>
