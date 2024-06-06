@@ -36,6 +36,9 @@ sky:
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+    user-secret-key: itcast
+    user-ttl: 7200000
+    user-token-name: authentication
   alioss:
     # 设置oss的endpoint
     endpoint: ${sky.alioss.endpoint}
@@ -45,4 +48,8 @@ sky:
     access-key-secret: ${sky.alioss.access-key-secret}
     # 设置oss的bucket名称
     bucket-name: ${sky.alioss.bucket-name}
+
+  wechat:
+    appid: ${sky.wechat.appid}
+    secret: ${sky.wechat.secret}
 
