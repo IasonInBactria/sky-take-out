@@ -1,6 +1,9 @@
 package com.sky.controller.user;
 
 
+import com.sky.constant.JwtClaimsConstant;
+import com.sky.dto.UserLoginDTO;
+import com.sky.entity.User;
 import com.sky.properties.JwtProperties;
 import com.sky.result.Result;
 import com.sky.service.UserService;
@@ -30,19 +33,26 @@ public class UserController {
     private final JwtProperties jwtProperties;
     /**
      * 微信登录
-     * @param userLoginVO
+     * @param UserLoginDTO
      * @return
      */
     @PostMapping("/login")
     @ApiOperation("微信登录")
-    public Result<UserLoginVO> login(@RequestBody UserLoginVO userLoginVO) {
+    public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
 
-        log.info("微信用户登录:{}", userLoginVO);
-        userService.wxLogin(userLoginVO);
+        log.info("微信用户登录:{}", userLoginDTO);
+        User user = userService.wxLogin(userLoginDTO);
 
         //生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
+        claims.put(JwtClaimsConstant.USER_ID, user.getId());
+        String loginToken = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
+
+        UserLoginVO userLoginVO = UserLoginVO.builder().id(user.getId())
+                .openid(user.getOpenid())
+                .token(loginToken)
+                .build();
+
         return Result.success();
     }
 }
