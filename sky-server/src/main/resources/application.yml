@@ -36,13 +36,19 @@ sky:
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
-  alioss:
-    # 设置oss的endpoint
-    endpoint: ${sky.alioss.endpoint}
-    # 设置oss的accessKeyId
-    access-key-id: ${sky.alioss.access-key-id}
-    # 设置oss的accessKeySecret
-    access-key-secret: ${sky.alioss.access-key-secret}
-    # 设置oss的bucket名称
-    bucket-name: ${sky.alioss.bucket-name}
+#  alioss:
+#    # 设置oss的endpoint
+#    endpoint: ${sky.alioss.endpoint}
+#    # 设置oss的accessKeyId
+#    access-key-id: ${sky.alioss.access-key-id}
+#    # 设置oss的accessKeySecret
+#    access-key-secret: ${sky.alioss.access-key-secret}
+#    # 设置oss的bucket名称
+#    bucket-name: ${sky.alioss.bucket-name}
+
+redis:
+  host: ${ sky.redis.host }
+  port: ${sky.redis.port}
+  password: ${sky.redis.password}
+
 

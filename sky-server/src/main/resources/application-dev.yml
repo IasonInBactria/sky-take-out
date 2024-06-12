@@ -5,9 +5,15 @@ sky:
     port: 3306
     database: sky_take_out
     username: root
-    password: '0205006'
+    password: gyang0205006
   alioss:
     # 设置oss的endpoint
     endpoint:
     # 设置oss的bucket名称
     bucket-name: springboot001
+
+redis:
+  host: localhost
+  port: 6379
+  password:
+
