@@ -13,7 +13,7 @@ public interface UserMapper {
      * @param openId
      * @return
      */
-    @Select("select * from user where open_id = #{openId}")
+    @Select("select * from user where openid = #{openId}")
     User getByOpenId(String openId);
 
     void insert(User user);

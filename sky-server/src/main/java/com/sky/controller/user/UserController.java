@@ -53,6 +53,6 @@ public class UserController {
                 .token(loginToken)
                 .build();
 
-        return Result.success();
+        return Result.success(userLoginVO);
     }
 }
