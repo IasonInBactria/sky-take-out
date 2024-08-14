@@ -7,8 +7,11 @@ import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +21,13 @@ import java.util.List;
 @RequestMapping("/user/dish")
 @Slf4j
 @Api(tags = "C端-菜品浏览接口")
+@RequiredArgsConstructor
 public class DishController {
     @Autowired
     private DishService dishService;
+    @Qualifier("redisTemplate")
+
+    private final RedisTemplate redisTemplate;
 
     /**
      * 根据分类id查询菜品
@@ -31,11 +38,21 @@ public class DishController {
     @GetMapping("/list")
     @ApiOperation("根据分类id查询菜品")
     public Result<List<DishVO>> list(Long categoryId) {
+
+        //查询redis中是否存在缓存
+        String key = "dish_" + categoryId;
+        List<DishVO> voList = (List<DishVO>)redisTemplate.opsForValue().get(key);
+        if (!voList.isEmpty() && voList.size() > 0) {
+            return Result.success(voList);
+        }
+
         Dish dish = new Dish();
         dish.setCategoryId(categoryId);
         dish.setStatus(StatusConstant.ENABLE);//查询起售中的菜品
 
+        //如果不存在，就查询数据库，然后存入redis
         List<DishVO> list = dishService.listWithFlavor(dish);
+        redisTemplate.opsForValue().set(key, list);
 
         return Result.success(list);
     }
