@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Objects;
 
 @RestController("userDishController")
 @RequestMapping("/user/dish")
@@ -42,7 +43,7 @@ public class DishController {
         //查询redis中是否存在缓存
         String key = "dish_" + categoryId;
         List<DishVO> voList = (List<DishVO>)redisTemplate.opsForValue().get(key);
-        if (!voList.isEmpty() && voList.size() > 0) {
+        if (!Objects.isNull(voList) && voList.size() > 0) {
             return Result.success(voList);
         }
 
