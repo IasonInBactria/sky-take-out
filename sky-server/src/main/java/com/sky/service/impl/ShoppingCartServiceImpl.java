@@ -42,12 +42,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         if (!Objects.isNull(shoppingCartList) && !shoppingCartList.isEmpty()) {
             ShoppingCart cart = shoppingCartList.get(0);
-            cart.setNumber(shoppingCart.getNumber() + 1);
+            cart.setNumber(cart.getNumber() + 1);
             shoppingCartMapper.updateNumberById(cart);
         } else {
              //判断添加到购物车的是菜品还是套餐
              Long dishId = shoppingCart.getDishId();
-             Long settledId = shoppingCart.getSetmealId();
+             Long setmealId = shoppingCart.getSetmealId();
              if (!Objects.isNull(dishId)) {
                  //本次添加的是菜品
                  Dish dish = dishMapper.getById(dishId);
@@ -56,10 +56,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                  shoppingCart.setAmount(dish.getPrice());
              } else {
                  //本次添加的是套餐
-                 Long setmealId = shoppingCart.getSetmealId();
                  shoppingCart.setName(setmealMapper.getById(setmealId).getName());
                  shoppingCart.setAmount(setmealMapper.getById(setmealId).getPrice());
-
              }
 
             shoppingCart.setNumber(1);
