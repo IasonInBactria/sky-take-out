@@ -5,6 +5,7 @@ import com.sky.dto.ShoppingCartDTO;
 import com.sky.result.Result;
 import com.sky.service.ShoppingCartService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,9 +30,26 @@ public class ShoppingCartController {
      * @return Result 成功添加购物车后的结果对象，目前仅表示操作成功，不包含其他信息
      */
     @PostMapping("/add")
+    @ApiOperation(value = "添加购物车")
     public Result add(@RequestBody ShoppingCartDTO shoppingCartDTO) {
         log.info("添加购物车, 商品信息为:{}", shoppingCartDTO);
         shoppingCartService.addShoppingCart(shoppingCartDTO);
+        return Result.success();
+    }
+
+    /**
+     * 减少购物车项
+     * 此方法通过POST请求接收一个ShoppingCartDTO对象，将购物车信息从系统中删除
+     * 目前该方法仅返回成功删除的结果，不处理具体的删除逻辑或错误情况
+     *
+     * @param shoppingCartDTO 购物车数据传输对象，包含购物车的相关信息
+     * @return Result 成功删除购物车后的结果对象，目前仅表示操作成功，不包含其他信息
+     */
+    @PostMapping("/sub")
+    @ApiOperation(value = "删除购物车中商品")
+    public Result sub(@RequestBody ShoppingCartDTO shoppingCartDTO) {
+        log.info("删除购物车, 商品信息为:{}", shoppingCartDTO);
+        shoppingCartService.subShoppingCart(shoppingCartDTO);
         return Result.success();
     }
 }

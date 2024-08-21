@@ -11,4 +11,10 @@ public interface ShoppingCartService {
      * @param shoppingCartDTO 购物车数据传输对象，包含了需要添加到购物车的商品信息
      */
     void addShoppingCart(ShoppingCartDTO shoppingCartDTO);
+
+    /**
+     * 减少购物车中商品的数量
+     * @param shoppingCartDTO
+     */
+    void subShoppingCart(ShoppingCartDTO shoppingCartDTO);
 }
