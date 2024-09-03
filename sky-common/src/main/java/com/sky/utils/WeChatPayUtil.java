@@ -88,10 +88,10 @@ public class WeChatPayUtil {
         httpPost.addHeader("Wechatpay-Serial", weChatProperties.getMchSerialNo());
         httpPost.setEntity(new StringEntity(body, "UTF-8"));
 
+        assert httpClient != null;
         CloseableHttpResponse response = httpClient.execute(httpPost);
         try {
-            String bodyAsString = EntityUtils.toString(response.getEntity());
-            return bodyAsString;
+            return EntityUtils.toString(response.getEntity());
         } finally {
             httpClient.close();
             response.close();

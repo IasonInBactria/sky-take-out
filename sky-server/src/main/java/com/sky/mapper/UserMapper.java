@@ -17,4 +17,6 @@ public interface UserMapper {
     User getByOpenId(String openId);
 
     void insert(User user);
+
+    User getById(Long userId);
 }

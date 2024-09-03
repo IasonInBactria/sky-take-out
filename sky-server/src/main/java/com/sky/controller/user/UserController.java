@@ -33,7 +33,7 @@ public class UserController {
     private final JwtProperties jwtProperties;
     /**
      * 微信登录
-     * @param UserLoginDTO
+     * @param userLoginDTO
      * @return
      */
     @PostMapping("/login")
