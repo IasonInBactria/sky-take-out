@@ -19,6 +19,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
     private final ShoppingCartMapper shoppingCartMapper;
     private final UserMapper userMapper;
     private final WeChatPayUtil weChatPayUtil;
+    private final WebSocketServer webSocketServer;
     /**
      * 用户下单
      *
@@ -163,6 +163,14 @@ public class OrderServiceImpl implements OrderService {
         order.setCheckoutTime(LocalDateTime.now());
 
         orderMapper.update(order);
+
+        // 调用WebSocketServer的sendMessage方法，向客户端发送消息
+        Map map = new HashMap();
+        map.put("type", 1); // 1表示来单提醒，2为客户催单
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号:" + outTradeNo);
+        String jsonStr = JSONObject.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonStr);
     }
 
     /**
@@ -446,6 +454,31 @@ public class OrderServiceImpl implements OrderService {
         orders.setDeliveryTime(LocalDateTime.now());
 
         orderMapper.update(orders);
+    }
+
+    /**
+     * 催单
+     *
+     * @param id 订单ID
+     */
+    @Override
+    public void reminder(Long id) {
+        //根据ID查询订单
+        Orders ordersDB = orderMapper.getById(id);
+
+        // 校验订单是否存在，并且状态为4
+        if (Objects.isNull(ordersDB) || !ordersDB.getStatus().equals(Orders.CONFIRMED)) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        Map<String, Object> oderMap = new HashMap<>();
+        oderMap.put("type", 2L);
+        oderMap.put("orderId", id);
+        oderMap.put("content", "订单号: " + ordersDB.getNumber());
+
+        webSocketServer.sendToAllClient(JSONObject.toJSONString(oderMap));
+
+        Orders orders = new Orders();
     }
 
     private List<OrderVO> getOrderVOList(Page<Orders> page) {

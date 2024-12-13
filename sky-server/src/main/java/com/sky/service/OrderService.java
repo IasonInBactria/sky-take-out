@@ -122,4 +122,11 @@ public interface OrderService {
      **/
 
     void complete(Long id);
+
+    /**
+     * 催单
+     * @param id 订单ID
+
+     */
+    void reminder(Long id);
 }
